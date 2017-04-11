@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "huanguang\\yii2avatar\\": ""
+            "huanguang\\yii2-avatar\\": ""
         }
     }
 }
