@@ -1,5 +1,5 @@
 <?php
-namespace huanguang\avatar;
+namespace huanguang\yii2avatar;
 /**
  * 设置挂件
  * @author 上班偷偷打酱油 （xianan_huang@163.com）
@@ -7,7 +7,7 @@ namespace huanguang\avatar;
  */
 use Yii;
 use yii\bootstrap\Widget;
-use hyii2\avatar\assets\AvatarAsset;
+use huanguang\yii2avatar\assets\AvatarAsset;
 use yii\base\Object;
 
 class AvatarWidget extends Widget
@@ -16,9 +16,8 @@ class AvatarWidget extends Widget
     
     public function run()
     {
-        $this->registerClientScript();
-        $model = new UploadForm();        
-        return $this->render('index',['model'=>$model]);
+        $this->registerClientScript();       
+        return $this->render('index',['imageUrl'=>$this->imageUrl]);
     }
     
     public function registerClientScript()

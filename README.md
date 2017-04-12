@@ -17,7 +17,7 @@ php composer.phar require --prefer-dist huanguang/yii2-avatar "dev-master"
 or add
 
 ```
-"huanguang/yii2-avatar": "dev-master"
+"huanguang/yii2avatar": "dev-master"
 ```
 
 to the require section of your `composer.json` file.
@@ -46,12 +46,14 @@ public function actions()
                 
                 //头像上传目录（注：目录前不能加"/"）
                 'uploadPath' => 'uploads/avatar',
-            ]
+            ],
+            'baseUrl' => '@web/upload/avatar',//访问目录
+            'basePath' => '@webroot/upload/avatar',//磁盘目录
         ]
     ]; 
     
 }
  
 //调用方式,imageUrl为默认图地址 234
-<?= \huanguang\avatar\AvatarWidget::widget(['imageUrl'=>'/statics/images/avatar/avatar_1.jpg']); ?>
+<?= \huanguang\yii2avatar\AvatarWidget::widget(['imageUrl'=>'/statics/images/avatar/avatar_1.jpg']); ?>
 ```

@@ -1,5 +1,5 @@
 <?php
-namespace huanguang\avatar;
+namespace huanguang\yii2avatar;
 
 use Yii;
 use yii\base\Model;

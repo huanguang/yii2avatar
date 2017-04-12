@@ -1,5 +1,5 @@
 <?php
-namespace hyii2\avatar\assets;
+namespace huanguang\yii2avatar\assets;
 
 use Yii;
 use yii\web\AssetBundle;
@@ -15,20 +15,24 @@ class AvatarAsset extends AssetBundle
         'css/bootstrap.min.css',
         'css/cropper.min.css',
         'css/main.css',
-        'css/site.css'
+        //'css/site.css'
     ];
     
     public $js = [
+        //'js/respond.min.js',
         'js/jquery-1.12.4.min.js',
         'js/bootstrap.min.js',
         'js/cropper.min.js',
         'js/main.js',
-        'js/site.js',
+        //'js/site.js',
     ];
     
     public $depends = [
         'yii\web\YiiAsset',
     ];
+    public $jsOptions = [  
+        'position' => \yii\web\View::POS_HEAD,   // 这是设置所有js放置的位置  
+    ]; 
     
     /**
      * 初始化：sourcePath赋值

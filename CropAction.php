@@ -1,5 +1,5 @@
 <?php
-namespace huanguang\avatar;
+namespace huanguang\yii2avatar;
 /**
  * @see Yii中文网  http://www.yii-china.com
  * @author Xianan Huang <Xianan_huang@163.com>
@@ -10,10 +10,14 @@ use Yii;
 use yii\base\Action;
 use yii\web\UploadedFile;
 use yii\helpers\ArrayHelper;
+use huanguang\yii2avatar\CropAvatar;
 
 class CropAction extends Action
 {
     public $config = [];
+
+    public $baseUrl;
+    public $basePath;
     
     public function init()
     {
@@ -27,23 +31,28 @@ class CropAction extends Action
             //头像上传目录
             'uploadPath' => 'uploads/avatar',  
         ];
+        $this->basePath = Yii::getAlias($this->basePath);//获取实际磁盘
+        $this->baseUrl = Yii::getAlias($this->baseUrl); //获取访问路径
         $this->config = ArrayHelper::merge($config, $this->config);
         parent::init();
     }
     
     public function run()
     {
-        $model = new UploadForm();
+         $crop = new CropAvatar(
+                
+                isset($_POST['avatar_src']) ? $_POST['avatar_src'] : null,
+                isset($_POST['avatar_data']) ? $_POST['avatar_data'] : null,
+                isset($_FILES['avatar_file']) ? $_FILES['avatar_file'] : null,
+                $this->basePath
+            );
+        $response = array(
+          'state'  => 200,
+          'message' => $crop -> getMsg(),
+          'result' => $this->baseUrl.'/'.$crop -> getResult()
+        );
+
+        echo json_encode($response);die;
         
-        if (Yii::$app->request->isPost) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            $post = Yii::$app->request->post();
-            $model->avatarData = $post['UploadForm']['avatarData'];
-            $model->config = $this->config;
-            if ($model->upload()) {
-                // 文件上传成功
-                return json_encode(['state'=>200,'message'=>'上传成功！','result'=>$model->imageUrl]);
-            }
-        }
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace huanguang\avatar;
+namespace huanguang\yii2avatar;
 class CropAvatar {
   private $src;
   private $data;
@@ -7,15 +7,17 @@ class CropAvatar {
   private $type;
   private $extension;
   private $msg;
+  private $basePath;
 
-  function __construct($src, $data, $file) {
+  public function __construct($src, $data, $file, $basePath) {
+    $this-> basePath = $basePath;
     $this -> setSrc($src);
     $this -> setData($data);
-    $this -> setFile($file);
-    $this -> crop($this -> src, $this -> dst, $this -> data);
+    $this -> setFile($file,$this->basePath);
+    $this -> crop($this -> src, $this-> basePath.'/'.$this -> dst, $this -> data);
   }
 
-  private function setSrc($src) {
+  public function setSrc($src) {
     if (!empty($src)) {
       $type = exif_imagetype($src);
 
@@ -28,13 +30,13 @@ class CropAvatar {
     }
   }
 
-  private function setData($data) {
+  public function setData($data) {
     if (!empty($data)) {
       $this -> data = json_decode(stripslashes($data));
     }
   }
 
-  private function setFile($file) {
+  public function setFile($file,$basePath) {
     $errorCode = $file['error'];
 
     if ($errorCode === UPLOAD_ERR_OK) {
@@ -42,14 +44,14 @@ class CropAvatar {
 
       if ($type) {
         $extension = image_type_to_extension($type);
-        $src = 'images/' . date('YmdHis') . '.original' . $extension;
+        $src = $basePath.'/' . date('YmdHis') . '.original' . $extension;
 
         if ($type == IMAGETYPE_GIF || $type == IMAGETYPE_JPEG || $type == IMAGETYPE_PNG) {
 
           if (file_exists($src)) {
             unlink($src);
           }
-
+          
           $result = move_uploaded_file($file['tmp_name'], $src);
 
           if ($result) {
@@ -71,11 +73,11 @@ class CropAvatar {
     }
   }
 
-  private function setDst() {
+  public function setDst() {
     $this -> dst = 'images/' . date('YmdHis') . '.png';
   }
 
-  private function crop($src, $dst, $data) {
+  public function crop($src, $dst, $data) {
     if (!empty($src) && !empty($dst) && !empty($data)) {
       switch ($this -> type) {
         case IMAGETYPE_GIF:
@@ -168,7 +170,7 @@ class CropAvatar {
       imagesavealpha($dst_img, true);
 
       $result = imagecopyresampled($dst_img, $src_img, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
-
+      //print_r($dst);die;
       if ($result) {
         if (!imagepng($dst_img, $dst)) {
           $this -> msg = "Failed to save the cropped image file";
@@ -182,7 +184,7 @@ class CropAvatar {
     }
   }
 
-  private function codeToMessage($code) {
+  public function codeToMessage($code) {
     $errors = array(
       UPLOAD_ERR_INI_SIZE =>'The uploaded file exceeds the upload_max_filesize directive in php.ini',
       UPLOAD_ERR_FORM_SIZE =>'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
